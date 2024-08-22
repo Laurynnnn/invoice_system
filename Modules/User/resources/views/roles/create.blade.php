@@ -11,13 +11,22 @@
             </div>
             <div class="form-group">
                 <strong><label for="permissions">Permissions</label></strong>
-                <div class="checkbox-group">
-                    @foreach($permissions as $permission)
-                        <div class="form-check">
-                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" class="form-check-input" id="permission-{{ $permission->id }}">
-                            <label class="form-check-label" for="permission-{{ $permission->id }}">
-                                {{ $permission->name }}
-                            </label>
+                <div class="row">
+                    @foreach($categories as $category)
+                        <div class="col-md-6 mb-3">
+                            <h4>{{ $category->name }}</h4>
+                            <div class="row">
+                                @foreach($category->permissions as $permission)
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" class="form-check-input" id="permission-{{ $permission->id }}">
+                                            <label class="form-check-label" for="permission-{{ $permission->id }}">
+                                                {{ $permission->name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     @endforeach
                 </div>

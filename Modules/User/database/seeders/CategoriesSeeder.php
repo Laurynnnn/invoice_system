@@ -1,0 +1,26 @@
+<?php
+
+namespace Modules\User\Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class CategoriesSeeder extends Seeder
+{
+    public function run()
+    {
+        $categories = [
+            'User Management',
+            'System Settings',
+            'Client Management',
+            'Invoice Management',
+            'Reporting',
+        ];
+
+        foreach ($categories as $categoryName) {
+            DB::table('permission_categories')->insert([
+                'name' => $categoryName,
+            ]);
+        }
+    }
+}

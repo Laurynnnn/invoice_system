@@ -30,7 +30,7 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 // Routes accessible to authenticated users
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::group(['middleware' => ['web', 'auth',]], function () {
     // Registration Routes
     Route::get('/register', [UserController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [UserController::class, 'register'])->name('register');

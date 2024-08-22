@@ -7,9 +7,17 @@ use Modules\User\Http\Requests\StoreRoleRequest;
 use Modules\User\Http\Requests\UpdateRoleRequest;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Modules\User\Models\PermissionCategory; // Make sure this is imported
 
 class RolePermissionController extends Controller
 {
+    // public function __construct()
+    // {
+    //     // Apply middleware for user management permissions
+    //     $this->middleware('permission:manage users', ['only' => ['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']]);
+    //     $this->middleware('permission:assign roles', ['only' => ['assignRole']]);
+    //     $this->middleware('permission:assign permissions', ['only' => ['assignPermission']]);
+    // }
     /**
      * Display a listing of the resource.
      */
@@ -24,8 +32,9 @@ class RolePermissionController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all(); // Fetch all permissions
-        return view('user::roles.create', compact('permissions'));
+        // Fetch all permission categories with their permissions
+        $categories = PermissionCategory::with('permissions')->get();
+        return view('user::roles.create', compact('categories')); // Pass categories to the view
     }
 
     /**
@@ -33,21 +42,14 @@ class RolePermissionController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        // Validate the request
         $validated = $request->validated();
 
-        // Debugging: Log the validated data
-        // Log::info('Validated Data:', $validated);
-
-        // Check if 'name' is set in validated data
         if (!isset($validated['name'])) {
             return redirect()->back()->withErrors(['name' => 'The role name is required.']);
         }
 
-        // Create role
         $role = Role::create(['name' => $validated['name']]);
 
-        // Assign permissions
         if (!empty($validated['permissions'])) {
             $role->syncPermissions($validated['permissions']);
         }
@@ -55,15 +57,16 @@ class RolePermissionController extends Controller
         return redirect()->route('roles.index')->with('success', 'Role created successfully.');
     }
 
-
     /**
      * Show the specified resource.
      */
     public function show($id)
     {
         $role = Role::findOrFail($id);
-        return view('user::roles.show', compact('role'));
+        $categories = PermissionCategory::with('permissions')->get(); // Fetch categories with permissions
+        return view('user::roles.show', compact('role', 'categories')); // Pass categories to the view
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -71,8 +74,8 @@ class RolePermissionController extends Controller
     public function edit($id)
     {
         $role = Role::findOrFail($id);
-        $permissions = Permission::all(); // Fetch all permissions
-        return view('user::roles.edit', compact('role', 'permissions'));
+        $categories = PermissionCategory::with('permissions')->get(); // Fetch all permission categories with their permissions
+        return view('user::roles.edit', compact('role', 'categories')); // Pass categories to the view
     }
 
     /**
@@ -83,10 +86,8 @@ class RolePermissionController extends Controller
         $validated = $request->validated();
         $role = Role::findOrFail($id);
 
-        // Update role
         $role->update(['name' => $validated['name']]);
 
-        // Update permissions
         if (!empty($validated['permissions'])) {
             $role->syncPermissions($validated['permissions']);
         }

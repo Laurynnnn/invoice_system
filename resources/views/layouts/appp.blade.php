@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Invoice System')</title>
+    <title>@yield('title', 'EMR System')</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -14,19 +14,8 @@
             flex-direction: column;
         }
         .navbar {
-            background-color: #003366; /* Dark blue background */
-            border-bottom: 1px solid #002244; /* Slightly darker border */
-            color: #ffffff;
-        }
-        .navbar-brand {
-            color: #ffffff;
-            font-weight: bold;
-        }
-        .navbar-brand:hover {
-            color: #b0bec5; /* Light gray-blue for hover */
-        }
-        .navbar-text {
-            color: #ffffff;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
         }
         .main-container {
             display: flex;
@@ -34,16 +23,16 @@
         }
         .sidebar {
             width: 250px;
-            background-color: #f0f2f5; /* Light gray background */
+            background-color: #535863;
             border-right: 1px solid #ddd;
             min-height: calc(100vh - 56px); /* Adjust based on the navbar height */
+            position: relative;
         }
         .sidebar .nav-link {
-            color: #003366; /* Dark blue text */
+            color: #fefcfc;
         }
         .sidebar .nav-link.active {
-            background-color: #003366; /* Dark blue background */
-            color: #ffffff; /* White text */
+            background-color: #2e89e4;
             border-radius: 4px;
         }
         .sidebar .nav-link.sub-link {
@@ -54,16 +43,16 @@
             padding: 20px;
             background-color: #ffffff;
         }
+        .navbar-brand {
+            margin-right: 1rem;
+        }
         .breadcrumb {
             background-color: transparent;
             padding: 0;
             margin-bottom: 1rem;
         }
         .breadcrumb-item a {
-            color: #003366; /* Dark blue text */
-        }
-        .breadcrumb-item a:hover {
-            color: #002244; /* Slightly darker blue for hover */
+            color: #2e89e4;
         }
         .logout {
             position: absolute;
@@ -71,18 +60,12 @@
             width: 100%;
             text-align: center;
         }
-        .btn-link {
-            color: #003366; /* Dark blue text */
-        }
-        .btn-link:hover {
-            color: #002244; /* Slightly darker blue for hover */
-        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Invoice System</a>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">Invoicing System</a>
         <div class="d-flex align-items-center ml-auto">
             @if(Auth::check())
                 <div class="d-flex align-items-center">
@@ -100,6 +83,7 @@
         <div class="sidebar">
             @if(Auth::check())
             <div class="nav flex-column">
+
                 <!-- Users Main Link with Sub-links -->
                 <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" data-toggle="collapse" href="#usersSubmenu" role="button" aria-expanded="{{ request()->routeIs('users.*') ? 'true' : 'false' }}" aria-controls="usersSubmenu">
                     <i class="fas fa-users"></i> Users
@@ -119,24 +103,6 @@
                     {{-- <a class="nav-link sub-link {{ request()->routeIs('roles.inactive') ? 'active' : '' }}" href="{{ route('roles.inactive') }}">Inactive Roles</a> --}}
                     <a class="nav-link sub-link {{ request()->routeIs('roles.create') ? 'active' : '' }}" href="{{ route('roles.create') }}">Add Role</a>
                 </div>
-                
-                {{-- <!-- Invoices Main Link with Sub-links -->
-                <a class="nav-link {{ request()->routeIs('invoices.*') ? 'active' : '' }}" data-toggle="collapse" href="#invoicesSubmenu" role="button" aria-expanded="{{ request()->routeIs('invoices.*') ? 'true' : 'false' }}" aria-controls="invoicesSubmenu">
-                    <i class="fas fa-file-invoice"></i> Invoices
-                </a>
-                <div class="collapse {{ request()->routeIs('invoices.*') ? 'show' : '' }}" id="invoicesSubmenu">
-                    <a class="nav-link sub-link {{ request()->routeIs('invoices.index') ? 'active' : '' }}" href="{{ route('invoices.index') }}">View Invoices</a>
-                    <a class="nav-link sub-link {{ request()->routeIs('invoices.create') ? 'active' : '' }}" href="{{ route('invoices.create') }}">Create Invoice</a>
-                </div>
-
-                <!-- Clients Main Link with Sub-links -->
-                <a class="nav-link {{ request()->routeIs('clients.*') ? 'active' : '' }}" data-toggle="collapse" href="#clientsSubmenu" role="button" aria-expanded="{{ request()->routeIs('clients.*') ? 'true' : 'false' }}" aria-controls="clientsSubmenu">
-                    <i class="fas fa-users"></i> Clients
-                </a>
-                <div class="collapse {{ request()->routeIs('clients.*') ? 'show' : '' }}" id="clientsSubmenu">
-                    <a class="nav-link sub-link {{ request()->routeIs('clients.index') ? 'active' : '' }}" href="{{ route('clients.index') }}">View Clients</a>
-                    <a class="nav-link sub-link {{ request()->routeIs('clients.create') ? 'active' : '' }}" href="{{ route('clients.create') }}">Add Client</a>
-                </div> --}}
 
                 <!-- Logout Button -->
                 @if(Auth::check())

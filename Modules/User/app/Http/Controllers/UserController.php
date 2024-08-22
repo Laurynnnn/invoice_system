@@ -15,15 +15,21 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 
 class UserController extends Controller
 {
-    // Show the registration form
+    // // Show the registration form
     public function showRegistrationForm()
     {
         $roles = Role::all(); // Use Role::all() to get roles for multiple role selection
 
         return view('user::auth.register', compact('roles'));
-    
     }
-    
+
+    // public function __construct()
+    // {
+    //     // Apply middleware for user management permissions
+    //     $this->middleware('permission:manage users', ['only' => ['index', 'show', 'create', 'store', 'edit', 'update', 'destroy', 'inactive', 'show_inactive', 'reactivate']]);
+    // }
+
+
     // Handle user registration
     public function register(StoreUserRequest $request)
     {
@@ -62,7 +68,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('patients');
+            return redirect()->intended('users');
         }
 
         return back()->withErrors([
