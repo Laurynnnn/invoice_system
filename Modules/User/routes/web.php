@@ -50,7 +50,10 @@ Route::group(['middleware' => ['web', 'auth',]], function () {
      Route::get('/roles/inactive', [RolePermissionController::class, 'inactive'])->name('roles.inactive');
      Route::patch('/roles/reactivate/{id}', [RolePermissionController::class, 'reactivate'])->name('roles.reactivate');
      Route::get('/roles/trashed/{id}', [RolePermissionController::class, 'show_Inactive'])->name('roles.show_inactive');
+
+     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 });
+
 
 
 

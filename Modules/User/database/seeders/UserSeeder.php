@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
         // Check if there's no admin user
         if (!User::where('email', 'laurynk@gmail.com')->exists()) {
             $adminUser = User::create([
-                'name' => 'Emr Admin',
+                'name' => 'Admin User',
                 'email' => 'laurynk@gmail.com',
                 'username' => 'admin',
                 'password' => Hash::make('#Admin@20'), // Set a password

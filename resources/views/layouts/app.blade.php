@@ -37,6 +37,8 @@
             background-color: #f0f2f5; /* Light gray background */
             border-right: 1px solid #ddd;
             min-height: calc(100vh - 56px); /* Adjust based on the navbar height */
+            display: flex;
+            flex-direction: column;
         }
         .sidebar .nav-link {
             color: #003366; /* Dark blue text */
@@ -66,9 +68,9 @@
             color: #002244; /* Slightly darker blue for hover */
         }
         .logout {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
+            margin-top: auto; /* Pushes the logout button to the bottom of the sidebar */
+            padding: 10px;
+            background-color: #f8f9fa; /* Background color to ensure visibility */
             text-align: center;
         }
         .btn-link {
@@ -100,50 +102,51 @@
         <div class="sidebar">
             @if(Auth::check())
             <div class="nav flex-column">
-                <!-- Users Main Link with Sub-links -->
-                <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" data-toggle="collapse" href="#usersSubmenu" role="button" aria-expanded="{{ request()->routeIs('users.*') ? 'true' : 'false' }}" aria-controls="usersSubmenu">
-                    <i class="fas fa-users"></i> Users
+                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
-                <div class="collapse {{ request()->routeIs('users.*') ? 'show' : '' }}" id="usersSubmenu">
-                    <a class="nav-link sub-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">Active Users</a>
-                    <a class="nav-link sub-link {{ request()->routeIs('users.inactive') ? 'active' : '' }}" href="{{ route('users.inactive') }}">Inactive Users</a>
-                    <a class="nav-link sub-link {{ request()->routeIs('users.create') ? 'active' : '' }}" href="{{ route('users.create') }}">Add User</a>
-                </div>
 
-                <!-- Roles Main Link with Sub-links -->
-                <a class="nav-link {{ request()->routeIs('roles.*') ? 'active' : '' }}" data-toggle="collapse" href="#rolesSubmenu" role="button" aria-expanded="{{ request()->routeIs('roles.*') ? 'true' : 'false' }}" aria-controls="rolesSubmenu">
-                    <i class="fas fa-user-shield"></i> User Roles
-                </a>
-                <div class="collapse {{ request()->routeIs('roles.*') ? 'show' : '' }}" id="rolesSubmenu">
-                    <a class="nav-link sub-link {{ request()->routeIs('roles.index') ? 'active' : '' }}" href="{{ route('roles.index') }}">Active Roles</a>
-                    {{-- <a class="nav-link sub-link {{ request()->routeIs('roles.inactive') ? 'active' : '' }}" href="{{ route('roles.inactive') }}">Inactive Roles</a> --}}
-                    <a class="nav-link sub-link {{ request()->routeIs('roles.create') ? 'active' : '' }}" href="{{ route('roles.create') }}">Add Role</a>
-                </div>
-                
-                {{-- <!-- Invoices Main Link with Sub-links -->
-                <a class="nav-link {{ request()->routeIs('invoices.*') ? 'active' : '' }}" data-toggle="collapse" href="#invoicesSubmenu" role="button" aria-expanded="{{ request()->routeIs('invoices.*') ? 'true' : 'false' }}" aria-controls="invoicesSubmenu">
-                    <i class="fas fa-file-invoice"></i> Invoices
-                </a>
-                <div class="collapse {{ request()->routeIs('invoices.*') ? 'show' : '' }}" id="invoicesSubmenu">
-                    <a class="nav-link sub-link {{ request()->routeIs('invoices.index') ? 'active' : '' }}" href="{{ route('invoices.index') }}">View Invoices</a>
-                    <a class="nav-link sub-link {{ request()->routeIs('invoices.create') ? 'active' : '' }}" href="{{ route('invoices.create') }}">Create Invoice</a>
-                </div>
+                <!-- Sidebar Links for User Management -->
+                <div class="nav flex-column">
+                    @can('manage users')
+                    <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" data-toggle="collapse" href="#usersSubmenu" role="button" aria-expanded="{{ request()->routeIs('users.*') ? 'true' : 'false' }}" aria-controls="usersSubmenu">
+                        <i class="fas fa-users"></i> Users
+                    </a>
+                    <div class="collapse {{ request()->routeIs('users.*') ? 'show' : '' }}" id="usersSubmenu">
+                        @can('manage users')
+                        <a class="nav-link sub-link {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">Active Users</a>
+                        @endcan
+                        @can('manage users')
+                        <a class="nav-link sub-link {{ request()->routeIs('users.inactive') ? 'active' : '' }}" href="{{ route('users.inactive') }}">Inactive Users</a>
+                        @endcan
+                        @can('manage users')
+                        <a class="nav-link sub-link {{ request()->routeIs('users.create') ? 'active' : '' }}" href="{{ route('users.create') }}">Add User</a>
+                        @endcan
+                    </div>
+                    @endcan
 
-                <!-- Clients Main Link with Sub-links -->
-                <a class="nav-link {{ request()->routeIs('clients.*') ? 'active' : '' }}" data-toggle="collapse" href="#clientsSubmenu" role="button" aria-expanded="{{ request()->routeIs('clients.*') ? 'true' : 'false' }}" aria-controls="clientsSubmenu">
-                    <i class="fas fa-users"></i> Clients
-                </a>
-                <div class="collapse {{ request()->routeIs('clients.*') ? 'show' : '' }}" id="clientsSubmenu">
-                    <a class="nav-link sub-link {{ request()->routeIs('clients.index') ? 'active' : '' }}" href="{{ route('clients.index') }}">View Clients</a>
-                    <a class="nav-link sub-link {{ request()->routeIs('clients.create') ? 'active' : '' }}" href="{{ route('clients.create') }}">Add Client</a>
-                </div> --}}
+                    <!-- Roles Management Links -->
+                    @can('assign roles')
+                    <a class="nav-link {{ request()->routeIs('roles.*') ? 'active' : '' }}" data-toggle="collapse" href="#rolesSubmenu" role="button" aria-expanded="{{ request()->routeIs('roles.*') ? 'true' : 'false' }}" aria-controls="rolesSubmenu">
+                        <i class="fas fa-user-shield"></i> User Roles
+                    </a>
+                    <div class="collapse {{ request()->routeIs('roles.*') ? 'show' : '' }}" id="rolesSubmenu">
+                        @can('assign roles')
+                        <a class="nav-link sub-link {{ request()->routeIs('roles.index') ? 'active' : '' }}" href="{{ route('roles.index') }}">Active Roles</a>
+                        @endcan
+                        @can('assign roles')
+                        <a class="nav-link sub-link {{ request()->routeIs('roles.create') ? 'active' : '' }}" href="{{ route('roles.create') }}">Add Role</a>
+                        @endcan
+                    </div>
+                    @endcan
+                </div>
 
                 <!-- Logout Button -->
                 @if(Auth::check())
                 <div class="logout">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-link text-light">
+                        <button type="submit" class="btn btn-link text-dark">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </form>
@@ -159,7 +162,7 @@
                     @yield('breadcrumbs')
                 </ol>
             </nav>
-            
+
             <!-- Main Content -->
             @yield('content')
         </div>

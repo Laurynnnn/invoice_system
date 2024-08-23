@@ -23,11 +23,11 @@ class UserController extends Controller
         return view('user::auth.register', compact('roles'));
     }
 
-    // public function __construct()
-    // {
-    //     // Apply middleware for user management permissions
-    //     $this->middleware('permission:manage users', ['only' => ['index', 'show', 'create', 'store', 'edit', 'update', 'destroy', 'inactive', 'show_inactive', 'reactivate']]);
-    // }
+    public function __construct()
+    {
+        // Apply middleware for user management permissions
+        $this->middleware('permission:manage users', ['only' => ['index', 'show', 'create', 'store', 'edit', 'update', 'destroy', 'inactive', 'show_inactive', 'reactivate']]);
+    }
 
 
     // Handle user registration
@@ -57,6 +57,12 @@ class UserController extends Controller
         return view('user::auth.login');
     }
 
+    public function dashboard()
+    {
+        return view('user::dashboard'); // Ensure you create this view
+    }
+
+
     // Handle user login
     public function login(Request $request)
     {
@@ -68,7 +74,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('users');
+            return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([

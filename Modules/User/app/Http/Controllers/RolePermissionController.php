@@ -11,13 +11,13 @@ use Modules\User\Models\PermissionCategory; // Make sure this is imported
 
 class RolePermissionController extends Controller
 {
-    // public function __construct()
-    // {
-    //     // Apply middleware for user management permissions
-    //     $this->middleware('permission:manage users', ['only' => ['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']]);
-    //     $this->middleware('permission:assign roles', ['only' => ['assignRole']]);
-    //     $this->middleware('permission:assign permissions', ['only' => ['assignPermission']]);
-    // }
+    public function __construct()
+    {
+        // Apply middleware for user management permissions
+        $this->middleware('permission:manage users', ['only' => ['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']]);
+        $this->middleware('permission:assign roles', ['only' => ['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']]);
+        $this->middleware('permission:assign permissions', ['only' => ['create', 'store']]);
+    }
     /**
      * Display a listing of the resource.
      */
