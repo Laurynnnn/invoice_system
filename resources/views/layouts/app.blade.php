@@ -139,6 +139,17 @@
                         @endcan
                     </div>
                     @endcan
+
+                    <!-- Client Links -->
+                    <a class="nav-link {{ request()->routeIs('clients.*') ? 'active' : '' }}" data-toggle="collapse" href="#clientsSubmenu" role="button" aria-expanded="{{ request()->routeIs('clients.*') ? 'true' : 'false' }}" aria-controls="clientsSubmenu">
+                        <i class="fas fa-building"></i> Clients
+                    </a>
+                    <div class="collapse {{ request()->routeIs('clients.*') ? 'show' : '' }}" id="clientsSubmenu">
+                        <a class="nav-link sub-link {{ request()->routeIs('clients.index') ? 'active' : '' }}" href="{{ route('clients.index') }}">Active Clients</a>
+                        <a class="nav-link sub-link {{ request()->routeIs('clients.create') ? 'active' : '' }}" href="{{ route('clients.create') }}">Add Client</a>
+                        <a class="nav-link sub-link {{ request()->routeIs('clients.inactive') ? 'active' : '' }}" href="{{ route('clients.inactive') }}">Inactive Clients</a>
+                    </div>
+
                 </div>
 
                 <!-- Logout Button -->
