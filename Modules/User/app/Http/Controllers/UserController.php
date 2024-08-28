@@ -2,38 +2,42 @@
 
 namespace Modules\User\Http\Controllers;
 
-use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Password;
 use Modules\User\Models\User;
 use Modules\User\Http\Requests\StoreUserRequest;
 use Modules\User\Http\Requests\UpdateUserRequest;
 use Spatie\Permission\Models\Role;
-use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class UserController extends Controller
 {
-    // // Show the registration form
-    public function showRegistrationForm()
-    {
-        $roles = Role::all(); // Use Role::all() to get roles for multiple role selection
-
-        return view('user::auth.register', compact('roles'));
-    }
-
     public function __construct()
     {
         // Apply middleware for user management permissions
-        $this->middleware('permission:manage users', ['only' => ['index', 'show', 'create', 'store', 'edit', 'update', 'destroy', 'inactive', 'show_inactive', 'reactivate']]);
+        $this->middleware('permission:manage users', ['only' => [
+            'index', 'show', 'create', 'store', 'edit', 'update', 'destroy', 'inactive', 'show_inactive', 'reactivate'
+        ]]);
+        
     }
 
+    // Show the registration form
+    public function showRegistrationForm()
+    {
+        $roles = Role::all(); // Use Role::all() to get roles for multiple role selection
+        return view('user::auth.register', compact('roles'));
+    }
 
     // Handle user registration
     public function register(StoreUserRequest $request)
     {
         $validated = $request->validated();
+        
 
         $user = User::create([
             'name' => $validated['name'],
@@ -41,14 +45,46 @@ class UserController extends Controller
             'username' => $validated['username'],
             'password' => Hash::make($validated['password']),
         ]);
+        
 
         // Assign roles to the user
         $roles = $validated['roles'];
         $user->syncRoles($roles);
 
-        // Auth::login($user);
+        // Send email verification notification
+        event(new Registered($user));
 
-        return redirect()->intended('users');
+        return redirect()->route('users.index')->with('success', 'User created successfully. A verification email has been sent.');
+    }
+
+    // Handle email verification
+    public function verify(Request $request, $id, $hash)
+    {
+        $user = User::findOrFail($id);
+
+        if (! hash_equals($hash, sha1($user->getEmailForVerification()))) {
+            return redirect()->route('login')->withErrors('The verification link has expired or is invalid.');
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Your email has been verified.');
+    }
+
+    // Handle resend verification link
+    public function resendVerificationLink(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('dashboard')->with('success', 'Your email is already verified.');
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return redirect()->route('dashboard')->with('success', 'A new verification link has been sent to your email address.');
     }
 
     // Show the login form
@@ -56,12 +92,6 @@ class UserController extends Controller
     {
         return view('user::auth.login');
     }
-
-    public function dashboard()
-    {
-        return view('user::dashboard'); // Ensure you create this view
-    }
-
 
     // Handle user login
     public function login(Request $request)
@@ -73,7 +103,6 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
             return redirect()->intended('dashboard');
         }
 
@@ -93,12 +122,17 @@ class UserController extends Controller
         return redirect('/login');
     }
 
+    // Show the dashboard
+    public function dashboard()
+    {
+        return view('user::dashboard');
+    }
+
     // Show the user edit form
     public function edit($id)
     {
         $user = User::findOrFail($id);
         $roles = Role::pluck('name', 'name')->all(); // Include roles for multiple role selection
-
 
         return view('user::auth.edit', compact('user', 'roles'));
     }
@@ -109,8 +143,6 @@ class UserController extends Controller
         $validated = $request->validated();
         $user = User::findOrFail($id);
 
-        // dd($user);
-
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -118,14 +150,9 @@ class UserController extends Controller
             'password' => isset($validated['password']) ? Hash::make($validated['password']) : $user->password,
         ]);
 
-        // dd($user);
-
-
         // Assign roles to the user
         $roles = $validated['roles'];
         $user->syncRoles($roles);
-
-        // dd($user);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
@@ -162,7 +189,6 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all(); // Use Role::all() to get roles for multiple role selection
-
         return view('user::auth.register', compact('roles'));
     }
 
@@ -182,7 +208,10 @@ class UserController extends Controller
         $roles = $validated['roles'];
         $user->syncRoles($roles);
 
-        return redirect()->route('users.index')->with('success', 'User created successfully');
+        // Send email verification notification
+        event(new Registered($user));
+
+        return redirect()->route('users.index')->with('success', 'User created successfully. A verification email has been sent.');
     }
 
     // Reactivate a user
@@ -198,4 +227,6 @@ class UserController extends Controller
         $user = User::onlyTrashed()->findOrFail($id);
         return view('user::show_inactive', compact('user'));
     }
+
+    
 }

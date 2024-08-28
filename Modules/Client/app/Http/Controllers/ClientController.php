@@ -4,12 +4,23 @@ namespace Modules\Client\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Modules\Client\Models\Client;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Notification;
 use Modules\Client\Http\Requests\StoreClientRequest;
 use Modules\Client\Http\Requests\UpdateClientRequest;
-use App\Http\Controllers\Controller;
+use Modules\Client\Notifications\ClientEmailVerificationNotification;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        // Apply middleware for client management permissions
+        $this->middleware('permission:view clients', ['only' => ['index', 'show', 'inactive', 'show_inactive']]);
+        $this->middleware('permission:create clients', ['only' => ['create', 'store']]);
+        $this->middleware('permission:update clients', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete clients', ['only' => ['destroy', 'reactivate']]);
+    }
+
     public function index()
     {
         // Retrieve all clients
@@ -24,15 +35,40 @@ class ClientController extends Controller
     }
 
     public function store(StoreClientRequest $request)
-{
-    // Debugging: Check if the data is being received correctly
-    // dd($request->all());
+    {
+        // Create the client
+        $client = Client::create($request->validated());
+    
+        // Send email verification notification
+        $client->notify(new ClientEmailVerificationNotification($client));
+    
+        return redirect()->route('clients.index')->with('success', 'Client created successfully. A verification email has been sent.');
+    }
 
-    // Proceed with saving the client
-    Client::create($request->validated());
+    public function verifyEmail($id, $hash)
+    {
+        $client = Client::findOrFail($id);
 
-    return redirect()->route('clients.index')->with('success', 'Client created successfully.');
-}
+        if (sha1($client->email) === $hash) {
+            // Mark email as verified
+            $client->email_verified = true;
+            $client->email_verified_at = now();
+            $client->save();
+
+            // Redirect to the verification success page
+            return view('client::verification_success', [
+                'client' => $client
+            ]);
+        }
+
+        // Redirect to the verification failure page
+        return view('client::verification_failure', [
+            'client' => $client
+        ]);
+    }
+
+
+
 
 
     public function edit(Client $client)

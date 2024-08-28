@@ -9,14 +9,16 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\MedicalRecord\Models\MedicalRecord;
 use Modules\Appointment\Models\Appointment;
-// use Illuminate\Auth\Authenticatable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Role;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, SoftDeletes, HasRoles;
+
+    use \Illuminate\Auth\MustVerifyEmail;
 
     protected $guard_name = 'web';
 

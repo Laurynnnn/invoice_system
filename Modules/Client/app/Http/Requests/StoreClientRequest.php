@@ -2,6 +2,7 @@
 
 namespace Modules\Client\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreClientRequest extends FormRequest
@@ -29,11 +30,14 @@ class StoreClientRequest extends FormRequest
             'location' => 'required|string|max:255',
             'contact_person_name' => 'required|string|max:255',
             'contact_person_phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|email:rfc,dns',
             'support_engineer_name' => 'required|string|max:255',
             'support_engineer_phone' => 'required|string|max:20',
             'support_engineer_email' => 'required|email|max:255',
-            'billing_cycle_years' => 'required|integer|min:1',
+            'billing_cycle_years' => [
+                'required',
+                Rule::in(['1 year', '2 years', '5 years']),
+            ],
         ];
     }
 
@@ -58,8 +62,7 @@ class StoreClientRequest extends FormRequest
             'support_engineer_email.required' => 'The support engineer email is required.',
             'support_engineer_email.email' => 'The support engineer email must be a valid email address.',
             'billing_cycle_years.required' => 'The billing cycle is required.',
-            'billing_cycle_years.integer' => 'The billing cycle must be an integer.',
-            'billing_cycle_years.min' => 'The billing cycle must be at least 1 year.',
+            'billing_cycle_years.in' => 'The selected billing cycle is invalid.',
         ];
     }
 }

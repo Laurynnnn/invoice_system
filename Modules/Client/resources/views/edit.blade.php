@@ -62,9 +62,18 @@
             <input type="email" name="support_engineer_email" id="support_engineer_email" class="form-control" value="{{ old('support_engineer_email', $client->support_engineer_email) }}" required>
         </div>
 
-        <div class="form-group">
+         <!-- Updated Billing Cycle Dropdown -->
+         <div class="form-group">
             <label for="billing_cycle_years">Billing Cycle (in Years)</label>
-            <input type="number" name="billing_cycle_years" id="billing_cycle_years" class="form-control" value="{{ old('billing_cycle_years', $client->billing_cycle_years) }}" required>
+            <select name="billing_cycle_years" id="billing_cycle_years" class="form-control" required>
+                <option value="">Select Billing Cycle</option>
+                <option value="1 year" {{ old('billing_cycle_years', $client->billing_cycle_years) == '1 year' ? 'selected' : '' }}>1 Year</option>
+                <option value="2 years" {{ old('billing_cycle_years', $client->billing_cycle_years) == '2 years' ? 'selected' : '' }}>2 Years</option>
+                <option value="5 years" {{ old('billing_cycle_years', $client->billing_cycle_years) == '5 years' ? 'selected' : '' }}>5 Years</option>
+            </select>
+            @error('billing_cycle_years')
+                <div class="alert alert-danger" role="alert">{{ $message }}</div>
+            @enderror
         </div>
 
         <button type="submit" class="btn btn-success">Update Client</button>

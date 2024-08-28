@@ -141,14 +141,23 @@
                     @endcan
 
                     <!-- Client Links -->
+                    @canany(['view clients', 'create clients', 'update clients', 'delete clients'])
                     <a class="nav-link {{ request()->routeIs('clients.*') ? 'active' : '' }}" data-toggle="collapse" href="#clientsSubmenu" role="button" aria-expanded="{{ request()->routeIs('clients.*') ? 'true' : 'false' }}" aria-controls="clientsSubmenu">
                         <i class="fas fa-building"></i> Clients
                     </a>
                     <div class="collapse {{ request()->routeIs('clients.*') ? 'show' : '' }}" id="clientsSubmenu">
-                        <a class="nav-link sub-link {{ request()->routeIs('clients.index') ? 'active' : '' }}" href="{{ route('clients.index') }}">Active Clients</a>
-                        <a class="nav-link sub-link {{ request()->routeIs('clients.create') ? 'active' : '' }}" href="{{ route('clients.create') }}">Add Client</a>
-                        <a class="nav-link sub-link {{ request()->routeIs('clients.inactive') ? 'active' : '' }}" href="{{ route('clients.inactive') }}">Inactive Clients</a>
+                        @can('view clients')
+                            <a class="nav-link sub-link {{ request()->routeIs('clients.index') ? 'active' : '' }}" href="{{ route('clients.index') }}">Active Clients</a>
+                        @endcan
+                        @can('create clients')
+                            <a class="nav-link sub-link {{ request()->routeIs('clients.create') ? 'active' : '' }}" href="{{ route('clients.create') }}">Add Client</a>
+                        @endcan
+                        @can('view clients')
+                            <a class="nav-link sub-link {{ request()->routeIs('clients.inactive') ? 'active' : '' }}" href="{{ route('clients.inactive') }}">Inactive Clients</a>
+                        @endcan
                     </div>
+                    @endcanany
+
 
                 </div>
 
