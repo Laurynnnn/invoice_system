@@ -1,4 +1,5 @@
 {
     "User": true,
-    "Client": true
+    "Client": true,
+    "Invoice": true
 }

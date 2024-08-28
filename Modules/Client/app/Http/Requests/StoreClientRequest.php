@@ -34,10 +34,7 @@ class StoreClientRequest extends FormRequest
             'support_engineer_name' => 'required|string|max:255',
             'support_engineer_phone' => 'required|string|max:20',
             'support_engineer_email' => 'required|email|max:255',
-            'billing_cycle_years' => [
-                'required',
-                Rule::in(['1 year', '2 years', '5 years']),
-            ],
+            'billing_cycle_amount_id' => 'required|exists:billing_cycle_amounts,id',
         ];
     }
 
@@ -61,8 +58,8 @@ class StoreClientRequest extends FormRequest
             'support_engineer_phone.required' => 'The support engineer phone is required.',
             'support_engineer_email.required' => 'The support engineer email is required.',
             'support_engineer_email.email' => 'The support engineer email must be a valid email address.',
-            'billing_cycle_years.required' => 'The billing cycle is required.',
-            'billing_cycle_years.in' => 'The selected billing cycle is invalid.',
+            'billing_cycle_amount_id.required' => 'The billing cycle amount is required.',
+            'billing_cycle_amount_id.exists' => 'The selected billing cycle amount is invalid.',
         ];
     }
 }

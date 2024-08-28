@@ -125,17 +125,19 @@
                 </div>
             </div>
 
-            <!-- Updated Billing Cycle Dropdown -->
-            <div class="col-md-6">
+             <!-- Updated Billing Cycle Amount Dropdown -->
+             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="billing_cycle_years">Billing Cycle (in Years)</label>
-                    <select name="billing_cycle_years" id="billing_cycle_years" class="form-control" required>
-                        <option value="">Select Billing Cycle</option>
-                        <option value="1 year" {{ old('billing_cycle_years') == '1 year' ? 'selected' : '' }}>1 Year</option>
-                        <option value="2 years" {{ old('billing_cycle_years') == '2 years' ? 'selected' : '' }}>2 Years</option>
-                        <option value="5 years" {{ old('billing_cycle_years') == '5 years' ? 'selected' : '' }}>5 Years</option>
+                    <label for="billing_cycle_amount_id">Billing Cycle Amount</label>
+                    <select name="billing_cycle_amount_id" id="billing_cycle_amount_id" class="form-control" required>
+                        <option value="">Select Billing Cycle Amount</option>
+                        @foreach($billingCycleAmounts as $amount)
+                            <option value="{{ $amount->id }}" {{ old('billing_cycle_amount_id') == $amount->id ? 'selected' : '' }}>
+                                {{ $amount->billing_cycle_years }} - ${{ $amount->amount }}
+                            </option>
+                        @endforeach
                     </select>
-                    @error('billing_cycle_years')
+                    @error('billing_cycle_amount_id')
                         <div class="alert alert-danger" role="alert">{{ $message }}</div>
                     @enderror
                 </div>

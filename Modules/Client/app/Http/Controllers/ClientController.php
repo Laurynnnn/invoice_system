@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Modules\Client\Models\Client;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Notification;
+use Modules\Invoice\Models\BillingCycleAmount;
 use Modules\Client\Http\Requests\StoreClientRequest;
 use Modules\Client\Http\Requests\UpdateClientRequest;
 use Modules\Client\Notifications\ClientEmailVerificationNotification;
@@ -28,11 +29,12 @@ class ClientController extends Controller
         return view('client::index', compact('clients'));
     }
 
-    public function create()
+        public function create()
     {
-        // Show create form
-        return view('client::create');
+        $billingCycleAmounts = BillingCycleAmount::all(); // Fetch all billing cycle amounts
+        return view('client::create', compact('billingCycleAmounts'));
     }
+
 
     public function store(StoreClientRequest $request)
     {

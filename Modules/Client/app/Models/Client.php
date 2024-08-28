@@ -23,7 +23,7 @@ class Client extends Model
         'support_engineer_name',
         'support_engineer_phone',
         'support_engineer_email',
-        'billing_cycle_years',
+        'billing_cycle_amount_id',
     ];
 
     protected $dates = ['deleted_at'];
@@ -43,6 +43,7 @@ class Client extends Model
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
+    
 
     //  // Implement MustVerifyEmail methods
 
