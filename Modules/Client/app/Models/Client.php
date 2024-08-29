@@ -23,7 +23,8 @@ class Client extends Model
         'support_engineer_name',
         'support_engineer_phone',
         'support_engineer_email',
-        'billing_cycle_amount_id',
+        'billing_cycle_years',
+        'amount'
     ];
 
     protected $dates = ['deleted_at'];

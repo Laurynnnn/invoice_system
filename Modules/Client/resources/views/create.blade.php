@@ -125,23 +125,27 @@
                 </div>
             </div>
 
-             <!-- Updated Billing Cycle Amount Dropdown -->
-             <div class="col-md-6">
-                <div class="form-group">
-                    <label for="billing_cycle_amount_id">Billing Cycle Amount</label>
-                    <select name="billing_cycle_amount_id" id="billing_cycle_amount_id" class="form-control" required>
-                        <option value="">Select Billing Cycle Amount</option>
-                        @foreach($billingCycleAmounts as $amount)
-                            <option value="{{ $amount->id }}" {{ old('billing_cycle_amount_id') == $amount->id ? 'selected' : '' }}>
-                                {{ $amount->billing_cycle_years }} - ${{ $amount->amount }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('billing_cycle_amount_id')
-                        <div class="alert alert-danger" role="alert">{{ $message }}</div>
-                    @enderror
+             <!-- Updated Billing Cycle Input -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="billing_cycle_years">Billing Cycle Years</label>
+                        <input type="number" name="billing_cycle_years" id="billing_cycle_years" class="form-control" value="{{ old('billing_cycle_years') }}" required>
+                        @error('billing_cycle_years')
+                            <div class="alert alert-danger" role="alert">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
-            </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" name="amount" id="amount" class="form-control" value="{{ old('amount') }}" step="0.01" required>
+                        @error('amount')
+                            <div class="alert alert-danger" role="alert">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
         </div>
 
         <button type="submit" class="btn btn-success">Create Client</button>

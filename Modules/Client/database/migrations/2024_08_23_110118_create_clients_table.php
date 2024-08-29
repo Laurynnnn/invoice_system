@@ -20,8 +20,9 @@ class CreateClientsTable extends Migration
             $table->string('support_engineer_phone');
             $table->string('support_engineer_email');
             $table->integer('billing_cycle_years');
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
+            $table->decimal('amount', 10, 2); 
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();
             $table->softDeletes(); // Add this line for soft deletes
             $table->timestamps();

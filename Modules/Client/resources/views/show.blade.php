@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1>{{ $client->name }}</h1>
+    <h1>{{ $client->client_name }}</h1>
 
     <div class="mb-3">
         <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-warning">Edit</a>
@@ -11,7 +11,6 @@
             @method('DELETE')
             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this client?')">Delete</button>
         </form>
-        <!-- New Button for Creating Invoice -->
         <a href="{{ route('invoices.create', ['client_id' => $client->id]) }}" class="btn btn-primary">Create Invoice</a>
     </div>
 
@@ -51,6 +50,10 @@
         <tr>
             <th>Billing Cycle (Years)</th>
             <td>{{ $client->billing_cycle_years }}</td>
+        </tr>
+        <tr>
+            <th>Amount</th>
+            <td>{{ $client->amount }}</td>
         </tr>
     </table>
 

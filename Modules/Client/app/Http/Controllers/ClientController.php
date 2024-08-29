@@ -29,10 +29,10 @@ class ClientController extends Controller
         return view('client::index', compact('clients'));
     }
 
-        public function create()
+    public function create()
     {
-        $billingCycleAmounts = BillingCycleAmount::all(); // Fetch all billing cycle amounts
-        return view('client::create', compact('billingCycleAmounts'));
+        // $billingCycleAmounts = BillingCycleAmount::all(); // Fetch all billing cycle amounts
+        return view('client::create');
     }
 
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id');
-            $table->decimal('invoice_amount', 10, 2); // Amount to be auto-filled based on billing cycle
+            $table->decimal('invoice_amount', 10, 2); // Amount to be input by finance
             $table->date('due_date');
             $table->enum('status', ['unpaid', 'paid'])->default('unpaid'); // Status managed by the system
             $table->timestamps();

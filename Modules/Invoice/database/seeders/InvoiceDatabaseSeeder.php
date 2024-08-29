@@ -12,7 +12,7 @@ class InvoiceDatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            BillingCycleAmountsSeeder::class,
+            // BillingCycleAmountsSeeder::class,
         ]);
     }
 }
