@@ -21,11 +21,11 @@
                 <tr>
                     <th>Name</th>
                     <th>Facility Level</th>
-                    <th>Location</th>
+                    <th>Email</th>
                     <th>Contact Person</th>
                     <th>Contact Phone</th>
-                    <th>Email</th>
                     <th>Payment Status</th>
+                    <td>Payment Due Date</td> <!-- Added payment due date -->
                     <th>Created By</th>
                     <th>Actions</th>
                 </tr>
@@ -35,11 +35,11 @@
                     <tr>
                         <td>{{ $client->client_name }}</td>
                         <td>{{ $client->facility_level }}</td>
-                        <td>{{ $client->location }}</td>
+                        <td>{{ $client->email }}</td>
                         <td>{{ $client->contact_person_name }}</td>
                         <td>{{ $client->contact_person_phone }}</td>
-                        <td>{{ $client->email }}</td>
                         <td>{{ $client->payment_status }}</td> <!-- Added payment status -->
+                        <td>{{ $client->payment_due_date ? $client->payment_due_date: 'N/A' }}</td> <!-- Payment due date -->
                         <td>{{ $client->createdBy ? $client->createdBy->name : 'N/A' }}</td>
                         <td>
                             @can('view clients')

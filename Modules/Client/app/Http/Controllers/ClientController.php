@@ -40,6 +40,12 @@ class ClientController extends Controller
     {
         // Create the client
         $client = Client::create($request->validated());
+
+        // Set payment_due_date to 5 minutes after created_at
+        $client->payment_due_date = now()->addMinutes(5);
+        
+        // Save the client
+        $client->save();
     
         // Send email verification notification
         $client->notify(new ClientEmailVerificationNotification($client));

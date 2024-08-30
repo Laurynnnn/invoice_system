@@ -38,7 +38,9 @@ class InvoiceServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([
+            \Modules\Invoice\Console\SendInvoicesCommand::class, // Add your command here
+        ]);
     }
 
     /**
