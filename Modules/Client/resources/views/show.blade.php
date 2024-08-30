@@ -11,7 +11,7 @@
             @method('DELETE')
             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this client?')">Delete</button>
         </form>
-        <a href="{{ route('invoices.create', ['client_id' => $client->id]) }}" class="btn btn-primary">Create Invoice</a>
+        <a href="{{ route('invoices.create', ['id' => $client->id]) }}" class="btn btn-primary">Create Invoice</a>
     </div>
 
     <table class="table table-striped">

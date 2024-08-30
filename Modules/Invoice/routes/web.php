@@ -17,8 +17,8 @@ use Modules\Invoice\Http\Controllers\InvoiceController;
 // Route::group([], function () {
 //     Route::resource('invoice', InvoiceController::class)->names('invoice');
 // });
-
 Route::middleware(['auth'])->group(function () {
-    Route::resource('invoices', InvoiceController::class);
-
+    Route::get('invoices/create/{id}', [InvoiceController::class, 'create'])->name('invoices.create');
+    // Route::resource('invoices', InvoiceController::class)->except(['create']);
 });
+

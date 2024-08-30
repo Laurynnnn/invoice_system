@@ -6,6 +6,7 @@ use Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Modules\Invoice\Models\Invoice;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 
@@ -43,6 +44,12 @@ class Client extends Model
     public function deletedBy()
     {
         return $this->belongsTo(User::class, 'deleted_by');
+    }
+
+    // Define the inverse relationship
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
     }
     
 
