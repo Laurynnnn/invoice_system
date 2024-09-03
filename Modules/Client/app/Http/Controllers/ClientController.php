@@ -42,7 +42,7 @@ class ClientController extends Controller
         $client = Client::create($request->validated());
 
         // Set payment_due_date to 5 minutes after created_at
-        $client->payment_due_date = now()->addMinutes(5);
+        $client->payment_due_date = now()->addMinutes(30);
         
         // Save the client
         $client->save();
@@ -74,8 +74,6 @@ class ClientController extends Controller
             'client' => $client
         ]);
     }
-
-
 
 
 

@@ -27,22 +27,28 @@ class InvoiceNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        // Generate PDF
+        // Generate the PDF invoice
         $pdf = Pdf::loadView('invoice::pdf', ['invoice' => $this->invoice]);
+
         // Access the client's name through the relationship
         $clientName = $this->invoice->client->client_name;
 
         return (new MailMessage)
-            ->subject('Your Invoice is Ready')
-            ->greeting('Hello ' . $clientName . ',')
-            ->line('Your invoice is attached to this email.')
+            ->subject('Invoice #'. $this->invoice->id .' from Streamline Health Tech Ltd.')
+            ->greeting('Dear ' . $clientName . ',')
+            ->line('We hope this message finds you well. Please find your invoice attached below.')
+            ->line('Invoice Details:')
             ->line('Invoice ID: ' . $this->invoice->id)
-            ->line('Amount: $' . number_format($this->invoice->amount, 2))
+            ->line('Total Amount: $' . number_format($this->invoice->amount, 2))
             ->line('Due Date: ' . $this->invoice->due_date)
+            ->line('We kindly request that you process the payment by the due date to avoid any late fees.')
+            ->line('Should you have any questions or need further assistance, please do not hesitate to contact our support team.')
+            ->line('Thank you for your prompt attention to this matter.')
             ->attachData($pdf->output(), 'invoice_' . $this->invoice->id . '.pdf', [
                 'mime' => 'application/pdf',
             ])
-            ->cc('finance@example.com')
-            ->cc('support@example.com');
+            ->cc('laurynkantono@example.com')  // Finance office
+            ->cc('ormservices100@example.com')  // Support contact
+            ->salutation('Sincerely, Streamline Health Tech.');
     }
 }

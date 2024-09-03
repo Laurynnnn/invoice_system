@@ -9,7 +9,7 @@ use Modules\Invoice\Http\Controllers\InvoiceController;
 class SendInvoicesCommand extends Command
 {
     protected $signature = 'invoices:send';
-    protected $description = 'Create and send invoices for clients with unpaid status and due date coming up in 5 minutes';
+    protected $description = 'Create and send invoices for clients with unpaid status and due date coming up in x minutes';
 
     public function __construct()
     {
@@ -19,10 +19,10 @@ class SendInvoicesCommand extends Command
     public function handle()
     {
         $now = now();
-        $tenMinutesFromNow = $now->copy()->addMinutes(10);
+        $tenHoursFromNow = $now->copy()->addHours(10); //Adds 10 hours to the current date and time
 
         $clients = Client::where('payment_status', 'unpaid')
-                        //  ->whereBetween('payment_due_date', [$now, $tenMinutesFromNow])
+                         ->whereBetween('payment_due_date', [$now, $tenHoursFromNow])
                          ->get();
 
         foreach ($clients as $client) {

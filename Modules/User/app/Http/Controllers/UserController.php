@@ -3,16 +3,17 @@
 namespace Modules\User\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\User\Models\User;
+use Modules\Client\Models\Client;
 use Illuminate\Routing\Controller;
+use Spatie\Permission\Models\Role;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Password;
-use Modules\User\Models\User;
 use Modules\User\Http\Requests\StoreUserRequest;
 use Modules\User\Http\Requests\UpdateUserRequest;
-use Spatie\Permission\Models\Role;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class UserController extends Controller
@@ -125,8 +126,31 @@ class UserController extends Controller
     // Show the dashboard
     public function dashboard()
     {
-        return view('user::dashboard');
+        $now = now();
+        $tenHoursFromNow = $now->copy()->addHours(10);
+
+        // Clients who are in arrears
+        $arrearsClients = Client::where('payment_status', 'unpaid')
+                                ->where('payment_due_date', '<', $now)
+                                ->get()
+                                ->map(function($client) use ($now) {
+                                    $client->days_overdue = $now->diffInDays($client->payment_due_date);
+                                    return $client;
+                                });
+
+        // Clients with upcoming billing dates
+        $upcomingBillingClients = Client::whereBetween('payment_due_date', [$now, $tenHoursFromNow])
+                                        ->get();
+
+        // Counts for charts
+        $paidCount = Client::where('payment_status', 'paid')->count();
+        $arrearsCount = $arrearsClients->count();
+        $upcomingCount = $upcomingBillingClients->count();
+
+        return view('user::dashboard', compact('arrearsClients', 'upcomingBillingClients', 'paidCount', 'arrearsCount', 'upcomingCount'));
     }
+
+
 
     // Show the user edit form
     public function edit($id)

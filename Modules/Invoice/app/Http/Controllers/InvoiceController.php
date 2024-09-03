@@ -19,7 +19,7 @@ class InvoiceController extends Controller
         $invoice = new Invoice();
         $invoice->client_id = $client->id;
         $invoice->amount = $client->amount; // Get amount from the client record
-        $invoice->due_date = now()->addYear(); // Set default due date for the demo
+        $invoice->due_date = $client->payment_due_date; //Get due date from client record
         $invoice->save();
 
         // Send the notification

@@ -21,7 +21,7 @@
         <div class="col-md-8">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Overview of Activities</h4>
+                    <h4>Overview of Client Activities</h4>
                 </div>
                 <div class="card-body">
                     <canvas id="activityChart"></canvas>
@@ -29,18 +29,19 @@
             </div>
         </div>
 
-        <!-- Message Board -->
+        <!-- Upcoming Billing Dates Message Board -->
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Message Board</h4>
+                    <h4>Upcoming Billing Dates</h4>
                 </div>
                 <div class="card-body">
                     <ul class="list-group">
-                        <li class="list-group-item">Remember to update your profile.</li>
-                        <li class="list-group-item">New user roles have been added.</li>
-                        <li class="list-group-item">The system will undergo maintenance on Saturday.</li>
-                        <!-- Add more messages as needed -->
+                        @foreach($upcomingBillingClients as $client)
+                            <li class="list-group-item">
+                                {{ $client->name }} - Billing Date: {{ $client->payment_due_date->format('d M Y') }}
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -48,30 +49,68 @@
     </div>
 
     <div class="row">
-        <!-- More Graphs or Cards Section -->
+        <!-- Clients in Arrears Section -->
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>System Usage</h4>
+                    <h4>Clients in Arrears</h4>
                 </div>
                 <div class="card-body">
-                    <canvas id="usageChart"></canvas>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Contact</th>
+                                <th>Payment Status</th>
+                                <th>Days Overdue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($arrearsClients as $client)
+                                <tr>
+                                    <td>{{ $client->name }}</td>
+                                    <td>{{ $client->location }}</td>
+                                    <td>{{ $client->contact_person_phone }}</td>
+                                    <td>{{ $client->payment_status }}</td>
+                                    <td>{{ $client->days_overdue }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
+        <!-- Clients with Upcoming Billing Dates Section -->
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Recent Activities</h4>
+                    <h4>Clients with Upcoming Billing Dates</h4>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group">
-                        <li class="list-group-item">User John Doe updated his profile.</li>
-                        <li class="list-group-item">New role "Lab Technician" was created.</li>
-                        <li class="list-group-item">A new patient record was added by Dr. Smith.</li>
-                        <!-- Add more activities as needed -->
-                    </ul>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Billing Date</th>
+                                <th>Invoice Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($upcomingBillingClients as $client)
+                                <tr>
+                                    <td>{{ $client->name }}</td>
+                                    <td>{{ $client->location }}</td>
+                                    <td>{{ $client->payment_due_date->format('d M Y') }}</td>
+                                    <td>{{ $client->billing_cycle_amount }}</td>
+                                    <td>{{ $client->payment_status }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -87,10 +126,10 @@
     const activityChart = new Chart(ctxActivity, {
         type: 'bar',
         data: {
-            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            labels: ['Paid', 'Arrears', 'Upcoming'],
             datasets: [{
-                label: 'Number of Activities',
-                data: [12, 19, 3, 5, 2, 3, 7],
+                label: 'Number of Clients',
+                data: [{{ $paidCount }}, {{ $arrearsCount }}, {{ $upcomingCount }}],
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -102,35 +141,6 @@
                     beginAtZero: true
                 }
             }
-        }
-    });
-
-    // Usage Chart
-    const ctxUsage = document.getElementById('usageChart').getContext('2d');
-    const usageChart = new Chart(ctxUsage, {
-        type: 'pie',
-        data: {
-            labels: ['Doctors', 'Nurses', 'Pharmacists', 'Admins'],
-            datasets: [{
-                label: 'System Usage',
-                data: [45, 25, 20, 10],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true
         }
     });
 </script>
