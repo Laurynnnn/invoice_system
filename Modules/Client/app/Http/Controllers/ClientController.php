@@ -75,6 +75,16 @@ class ClientController extends Controller
         ]);
     }
 
+    public function markAsPaid($clientId)
+    {
+        $client = Client::findOrFail($clientId);
+        $client->payment_status = 'paid';
+        $client->save();
+
+        return redirect()->back()->with('status', 'Client marked as paid successfully.');
+    }
+
+
 
 
     public function edit(Client $client)

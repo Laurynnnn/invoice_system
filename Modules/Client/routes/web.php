@@ -23,8 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/client/inactive', [ClientController::class, 'inactive'])->name('clients.inactive');
     Route::patch('/client/reactivate/{id}', [ClientController::class, 'reactivate'])->name('clients.reactivate');
     Route::get('client/trashed/{id}', [ClientController::class, 'show_inactive'])->name('clients.show_inactive');
-    // Route::get('/client/verify/{id}/{hash}', [ClientController::class, 'verifyEmail'])->name('client.verify');
-
+    Route::post('/clients/{client}/mark-as-paid', [ClientController::class, 'markAsPaid'])->name('clients.markAsPaid');
 });
 
 Route::get('/client/verify/{id}/{hash}', [ClientController::class, 'verifyEmail'])->name('client.verify');

@@ -4,15 +4,37 @@
 <div class="container">
     <h1>{{ $client->client_name }}</h1>
 
-    <div class="mb-3">
+    <div class="mb-4">
         <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-warning">Edit</a>
-        <form action="{{ route('clients.destroy', $client->id) }}" method="POST" style="display:inline;">
+        <form action="{{ route('clients.destroy', $client->id) }}" method="POST" class="d-inline">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this client?')">Delete</button>
         </form>
         <a href="{{ route('invoices.create', ['id' => $client->id]) }}" class="btn btn-primary">Create Invoice</a>
+    
+        <form action="{{ route('clients.markAsPaid', $client->id) }}" method="POST" class="d-inline" onsubmit="return handleMarkAsPaid(event)">
+            @csrf
+            <button type="submit" class="btn btn-success" {{ $client->payment_status === 'paid' ? 'disabled' : '' }}>
+                {{ $client->payment_status === 'paid' ? 'Already Paid' : 'Mark as Paid' }}
+            </button>
+        </form>
     </div>
+    
+    <script>
+    function handleMarkAsPaid(event) {
+        // Prevent the default form submission
+        event.preventDefault();
+    
+        // Show success popup
+        alert('Client has been marked as paid.');
+    
+        // Optionally submit the form programmatically
+        event.target.submit();
+    }
+    </script>
+    
+    
 
     <table class="table table-striped">
         <tr>
