@@ -17,7 +17,7 @@ class InvoiceController extends Controller
         // Retrieve the subscription associated with the client
         $subscription = $client->subscriptions()->latest()->first(); // Assuming there could be multiple subscriptions
 
-        if ($subscription && $client->payment_status !== 'paid') {
+        if ($subscription->payment_status !== 'paid') {
             // Create a new invoice with the amount from the client
             $invoice = new Invoice();
             $invoice->client_id = $client->id;
