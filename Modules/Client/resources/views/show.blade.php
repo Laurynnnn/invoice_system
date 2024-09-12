@@ -12,6 +12,9 @@
             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this client?')">Delete</button>
         </form>
         <a href="{{ route('invoices.create', ['id' => $client->id]) }}" class="btn btn-primary">Create Invoice</a>
+        <a href="{{ route('subscriptions.create', ['client_id' => $client->id]) }}" class="btn btn-primary">Create Subscription</a>
+        <a href="{{ route('subscriptions.index', ['client_id' => $client->id]) }}" class="btn btn-primary">View Subscriptions</a>
+
     
         <form action="{{ route('clients.markAsPaid', $client->id) }}" method="POST" class="d-inline" onsubmit="return handleMarkAsPaid(event)">
             @csrf

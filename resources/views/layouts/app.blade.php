@@ -158,6 +158,24 @@
                     </div>
                     @endcanany
 
+                    <!-- Subscriptions Links -->
+                    {{-- @canany(['view subscriptions', 'create subscriptions', 'update subscriptions', 'delete subscriptions']) --}}
+                    <a class="nav-link {{ request()->routeIs('subscriptions.*') ? 'active' : '' }}" data-toggle="collapse" href="#subscriptionsSubmenu" role="button" aria-expanded="{{ request()->routeIs('subscriptions.*') ? 'true' : 'false' }}" aria-controls="subscriptionsSubmenu">
+                        <i class="fas fa-calendar-alt"></i> Subscriptions
+                    </a>
+                    <div class="collapse {{ request()->routeIs('subscriptions.*') ? 'show' : '' }}" id="subscriptionsSubmenu">
+                        {{-- @can('view subscriptions') --}}
+                            <a class="nav-link sub-link {{ request()->routeIs('subscriptions.index') ? 'active' : '' }}" href="{{ route('subscriptions.index') }}">Active Subscriptions</a>
+                        {{-- @endcan --}}
+                        {{-- @can('create subscriptions') --}}
+                            <a class="nav-link sub-link {{ request()->routeIs('subscriptions.create') ? 'active' : '' }}" href="{{ route('subscriptions.create') }}">Add Subscription</a>
+                        {{-- @endcan --}}
+                        {{-- @can('view subscriptions') --}}
+                            <a class="nav-link sub-link {{ request()->routeIs('subscriptions.inactive') ? 'active' : '' }}" href="{{ route('subscriptions.inactive') }}">Inactive Subscriptions</a>
+                        {{-- @endcan --}}
+                    </div>
+                    {{-- @endcanany --}}
+
 
                 </div>
 

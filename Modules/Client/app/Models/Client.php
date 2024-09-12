@@ -3,10 +3,11 @@
 namespace Modules\Client\Models;
 
 use Modules\User\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
 use Modules\Invoice\Models\Invoice;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Modules\Invoice\Models\Subscription;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 
@@ -52,6 +53,10 @@ class Client extends Model
         return $this->hasMany(Invoice::class);
     }
     
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 
     //  // Implement MustVerifyEmail methods
 
