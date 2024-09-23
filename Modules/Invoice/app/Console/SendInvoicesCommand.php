@@ -29,6 +29,11 @@ class SendInvoicesCommand extends Command
         foreach ($subscriptions as $subscription) {
             $invoiceController = new InvoiceController();
             $invoiceController->create($subscription->client_id); // Call the create method with the client ID
+
+            // Set the initial reminder date to be two weeks after the invoice is sent
+            $subscription->update([
+                'next_reminder_date' => $now->copy()->addWeeks(2)
+            ]);
         }
 
         $this->info('Invoices have been created and sent successfully!');

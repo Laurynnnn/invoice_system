@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/subscription/inactive', [SubscriptionController::class, 'inactive'])->name('subscriptions.inactive');
     Route::patch('/subscription/reactivate/{id}', [SubscriptionController::class, 'reactivate'])->name('subscriptions.reactivate');
     Route::get('subscription/trashed/{id}', [SubscriptionController::class, 'show_inactive'])->name('subscriptions.show_inactive');
+    Route::post('/subscriptions/{client}/mark-as-paid', [SubscriptionController::class, 'markAsPaid'])->name('subscriptions.markAsPaid');
 
 });
 

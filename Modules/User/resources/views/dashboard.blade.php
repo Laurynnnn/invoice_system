@@ -37,11 +37,9 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-group">
-                        @foreach($upcomingBillingClients as $client)
-                            <li class="list-group-item">
-                                {{ $client->name }} - Billing Date: {{ $client->payment_due_date->format('d M Y') }}
-                            </li>
-                        @endforeach
+                        <li class="list-group-item">Client A - Billing Date: 15 Oct 2024</li>
+                        <li class="list-group-item">Client B - Billing Date: 20 Oct 2024</li>
+                        <li class="list-group-item">Client C - Billing Date: 25 Oct 2024</li>
                     </ul>
                 </div>
             </div>
@@ -67,15 +65,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($arrearsClients as $client)
-                                <tr>
-                                    <td>{{ $client->name }}</td>
-                                    <td>{{ $client->location }}</td>
-                                    <td>{{ $client->contact_person_phone }}</td>
-                                    <td>{{ $client->payment_status }}</td>
-                                    <td>{{ $client->days_overdue }}</td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td>Client D</td>
+                                <td>New York</td>
+                                <td>+1234567890</td>
+                                <td>Unpaid</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>Client E</td>
+                                <td>Los Angeles</td>
+                                <td>+0987654321</td>
+                                <td>Unpaid</td>
+                                <td>5</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -100,15 +103,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($upcomingBillingClients as $client)
-                                <tr>
-                                    <td>{{ $client->name }}</td>
-                                    <td>{{ $client->location }}</td>
-                                    <td>{{ $client->payment_due_date->format('d M Y') }}</td>
-                                    <td>{{ $client->billing_cycle_amount }}</td>
-                                    <td>{{ $client->payment_status }}</td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td>Client F</td>
+                                <td>Chicago</td>
+                                <td>15 Oct 2024</td>
+                                <td>$500</td>
+                                <td>Pending</td>
+                            </tr>
+                            <tr>
+                                <td>Client G</td>
+                                <td>Houston</td>
+                                <td>20 Oct 2024</td>
+                                <td>$750</td>
+                                <td>Pending</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -129,7 +137,7 @@
             labels: ['Paid', 'Arrears', 'Upcoming'],
             datasets: [{
                 label: 'Number of Clients',
-                data: [{{ $paidCount }}, {{ $arrearsCount }}, {{ $upcomingCount }}],
+                data: [15, 5, 10], // Static numbers for Paid, Arrears, and Upcoming
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1

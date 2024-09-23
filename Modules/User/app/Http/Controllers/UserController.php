@@ -75,18 +75,18 @@ class UserController extends Controller
     }
 
     // Handle resend verification link
-    public function resendVerificationLink(Request $request)
-    {
-        $user = Auth::user();
+    // public function resendVerificationLink(Request $request)
+    // {
+    //     $user = Auth::user();
 
-        if ($user->hasVerifiedEmail()) {
-            return redirect()->route('dashboard')->with('success', 'Your email is already verified.');
-        }
+    //     if ($user->hasVerifiedEmail()) {
+    //         return redirect()->route('dashboard')->with('success', 'Your email is already verified.');
+    //     }
 
-        $user->sendEmailVerificationNotification();
+    //     $user->sendEmailVerificationNotification();
 
-        return redirect()->route('dashboard')->with('success', 'A new verification link has been sent to your email address.');
-    }
+    //     return redirect()->route('dashboard')->with('success', 'A new verification link has been sent to your email address.');
+    // }
 
     // Show the login form
     public function showLoginForm()
@@ -130,24 +130,25 @@ class UserController extends Controller
         $tenHoursFromNow = $now->copy()->addHours(10);
 
         // Clients who are in arrears
-        $arrearsClients = Client::where('payment_status', 'unpaid')
-                                ->where('payment_due_date', '<', $now)
-                                ->get()
-                                ->map(function($client) use ($now) {
-                                    $client->days_overdue = $now->diffInDays($client->payment_due_date);
-                                    return $client;
-                                });
+        // $arrearsClients = Client::where('payment_status', 'unpaid')
+        //                         ->where('payment_due_date', '<', $now)
+        //                         ->get()
+        //                         ->map(function($client) use ($now) {
+        //                             $client->days_overdue = $now->diffInDays($client->payment_due_date);
+        //                             return $client;
+        //                         });
 
-        // Clients with upcoming billing dates
-        $upcomingBillingClients = Client::whereBetween('payment_due_date', [$now, $tenHoursFromNow])
-                                        ->get();
+        // // Clients with upcoming billing dates
+        // $upcomingBillingClients = Client::whereBetween('payment_due_date', [$now, $tenHoursFromNow])
+        //                                 ->get();
 
-        // Counts for charts
-        $paidCount = Client::where('payment_status', 'paid')->count();
-        $arrearsCount = $arrearsClients->count();
-        $upcomingCount = $upcomingBillingClients->count();
+        // // Counts for charts
+        // // $paidCount = Client::where('payment_status', 'paid')->count();
+        // $arrearsCount = $arrearsClients->count();
+        // $upcomingCount = $upcomingBillingClients->count();
 
-        return view('user::dashboard', compact('arrearsClients', 'upcomingBillingClients', 'paidCount', 'arrearsCount', 'upcomingCount'));
+        // return view('user::dashboard', compact('arrearsClients', 'upcomingBillingClients', 'paidCount', 'arrearsCount', 'upcomingCount'));
+        return view('user::dashboard');
     }
 
 

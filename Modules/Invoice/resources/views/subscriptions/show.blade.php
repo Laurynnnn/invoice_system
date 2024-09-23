@@ -48,6 +48,26 @@
             @method('DELETE')
             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
         </form>
+
+        <form action="{{ route('subscriptions.markAsPaid', $subscription->id) }}" method="POST" class="d-inline" onsubmit="return handleMarkAsPaid(event)">
+            @csrf
+            <button type="submit" class="btn btn-success" {{ $subscription->payment_status === 'paid' ? 'disabled' : '' }}>
+                {{ $subscription->payment_status === 'paid' ? 'Already Paid' : 'Mark as Paid' }}
+            </button>
+        </form>
     </div>
+
+    <script>
+        function handleMarkAsPaid(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+        
+            // Show success popup
+            alert('Subscription has been marked as paid.');
+        
+            // Optionally submit the form programmatically
+            event.target.submit();
+        }
+        </script>
 </div>
 @endsection

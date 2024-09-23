@@ -62,6 +62,15 @@ class SubscriptionController extends Controller
         return view('invoice::subscriptions.edit', compact('subscription', 'clients'));
     }
 
+    public function markAsPaid($subscriptionId)
+    {
+        $subscription = Subscription::findOrFail($subscriptionId);
+        $subscription->payment_status = 'paid';
+        $subscription->save();
+
+        return redirect()->back()->with('status', 'Subscription marked as paid successfully.');
+    }
+
     // Update the specified subscription
     public function update(UpdateSubscriptionRequest $request, $id)
     {
