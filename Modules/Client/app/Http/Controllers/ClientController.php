@@ -85,8 +85,6 @@ class ClientController extends Controller
     }
 
 
-
-
     public function edit(Client $client)
     {
         // Show edit form

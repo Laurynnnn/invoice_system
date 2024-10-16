@@ -123,32 +123,52 @@ class UserController extends Controller
         return redirect('/login');
     }
 
+    // // Show the dashboard
+    // public function dashboard()
+    // {
+    //     $now = now();
+    //     $tenHoursFromNow = $now->copy()->addHours(10);
+
+    //     return view('user::dashboard');
+    // }
+
     // Show the dashboard
     public function dashboard()
     {
+        // Current time
         $now = now();
+        
+        // Define the range for upcoming billing dates (10 hours from now)
         $tenHoursFromNow = $now->copy()->addHours(10);
 
-        // Clients who are in arrears
-        // $arrearsClients = Client::where('payment_status', 'unpaid')
-        //                         ->where('payment_due_date', '<', $now)
-        //                         ->get()
-        //                         ->map(function($client) use ($now) {
-        //                             $client->days_overdue = $now->diffInDays($client->payment_due_date);
-        //                             return $client;
-        //                         });
+        // Get clients in arrears based on subscription payment status
+        $clientsInArrears = Client::whereHas('subscriptions', function($query) use ($now) {
+            $query->where('payment_status', 'Unpaid')
+                ->where('end_date', '<', $now); // Overdue subscriptions
+        })->get();
 
-        // // Clients with upcoming billing dates
-        // $upcomingBillingClients = Client::whereBetween('payment_due_date', [$now, $tenHoursFromNow])
-        //                                 ->get();
+        // Get clients with upcoming billing dates based on subscriptions
+        $upcomingBillingClients = Client::whereHas('subscriptions', function($query) use ($tenHoursFromNow, $now) {
+            $query->where('end_date', '>=', $now)
+                ->where('end_date', '<=', $tenHoursFromNow); // Subscriptions due in the next 10 hours
+        })->get();
 
-        // // Counts for charts
-        // // $paidCount = Client::where('payment_status', 'paid')->count();
-        // $arrearsCount = $arrearsClients->count();
-        // $upcomingCount = $upcomingBillingClients->count();
+        // Total counts for chart data
+        $paidClientsCount = Client::whereHas('subscriptions', function($query) {
+            $query->where('payment_status', 'Paid');
+        })->count();
 
-        // return view('user::dashboard', compact('arrearsClients', 'upcomingBillingClients', 'paidCount', 'arrearsCount', 'upcomingCount'));
-        return view('user::dashboard');
+        $arrearsClientsCount = $clientsInArrears->count();
+        $upcomingClientsCount = $upcomingBillingClients->count();
+
+        // Pass data to the view
+        return view('user::dashboard', [
+            'clientsInArrears' => $clientsInArrears,
+            'upcomingBillingClients' => $upcomingBillingClients,
+            'paidClientsCount' => $paidClientsCount,
+            'arrearsClientsCount' => $arrearsClientsCount,
+            'upcomingClientsCount' => $upcomingClientsCount
+        ]);
     }
 
 
